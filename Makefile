@@ -14,6 +14,7 @@ NAME	= fdf
 SRC		= main.c\
 			parse.c\
 			linemap.c\
+			ft_3d.c\
 			get_next_line/get_next_line.c\
 			get_next_line/get_next_line_utils.c
 
