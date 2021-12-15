@@ -6,15 +6,17 @@
 #define FT_3D_H
 
 typedef struct s_point{
-	int	x;
-	int	y;
-	int	z;
+	float	x;
+	float	y;
+	float	z;
 }				t_point;
 
-typedef int t_m4[16];
+typedef float t_m4[16];
 
 void	set_identity(t_m4 *mat);
 void	mult_matvec(t_m4 mat, t_point p1, t_point *out);
-t_point	point_new(int x, int y, int z);
+void  rotateX_mat(t_m4 *mat, float angle);
+
+t_point	point_new(float x, float y, float z);
 
 #endif //FDF_3D_H

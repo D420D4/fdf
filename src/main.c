@@ -72,93 +72,106 @@ int drawline_win(t_data *data, t_point t1, t_point t2) {
 	int d2 = ft_abs(t1.y - t2.y);
 	int max = ft_max(d1, d2);
 	int i;
+  int x;
+  int y;
 
+  i = 0;
 	while (i < max) {
-		my_mlx_pixel_put(&data->img,
-						 t1.x + (t2.x - t1.x) * i / max,
-						 t1.y + (t2.y - t1.y) * i / max,
-						 0x00FF0000);
-		i++;
-	}
+		
+    x = t1.x + (t2.x - t1.x) * i / max;
+    y = t1.y + (t2.y - t1.y) * i / max;
+    if (x >= 0 && x < 500 && y >= 0 && y < 500)
+    my_mlx_pixel_put(&(data->img),
+        x, y,
+        0x00FF0000);
+    i++;
+  }
 
-	return (0);
+  return (0);
 }
 
 
 int drawline(t_data *data, t_point t1, t_point t2, t_m4 mat)
 {
-	t_point bt1;
-	t_point bt2;
+  t_point bt1;
+  t_point bt2;
 
-	mult_matvec(mat, t1, &bt1);
-	mult_matvec(mat, t2, &bt2);
-	drawline_win(data, bt1, bt2);
+  mult_matvec(mat, t1, &bt1);
+  mult_matvec(mat, t2, &bt2);
+  drawline_win(data, bt1, bt2);
 
-	return (0);
+  return (0);
 }
 
 int draw_row(t_data *data, t_m4 mat, t_linemap line, int y) {
-	int i;
-	t_point t1;
-	t_point t2;
+  int i;
+  t_point t1;
+  t_point t2;
 
-	i = 0;
-	while (i < line.size - 1) {
-		t1 = point_new(i, y, line.line[i]);
-		t2 = point_new(i + 1, y, line.line[i + 1]);
-		drawline(data, t1, t2, mat);
-		i++;
-	}
-	return (0);
+  i = 0;
+  while (i < line.size - 1) {
+    t1 = point_new(i, y, line.line[i]);
+    t2 = point_new(i + 1, y, line.line[i + 1]);
+    drawline(data, t1, t2, mat);
+    i++;
+  }
+  return (0);
 }
 
 int render(t_data *data) {
-	static t_m4 mat;
-	t_linemap *linemap;
-	int i;
+  static t_m4 mat;
+  static int cmp = 0;
+  t_linemap *linemap;
+  int i;
+  
+  i = 0;
+  set_identity(&mat);
+  rotateX_mat(&mat, cmp/ 100);
+  if (!data->win)
+    return (0);
+  cmp++;
+  linemap = data->map;
+  while (linemap) {
+    draw_row(data, mat, *linemap, i);
+    i++;
+    linemap = linemap->next;
+  }
 
-	i = 0;
-	set_identity(&mat);
 
-	if (!data->win)
-		return (0);
+  mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
 
-	linemap = data->map;
-	while (linemap) {
-		draw_row(data, mat, *linemap, i);
-		i++;
-		linemap = linemap->next;
-	}
-
-
-	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
-
-//    printf(".");
-	return (1);
+  //    printf(".");
+  return (1);
 }
 
 int main() {
-	t_data data;
+  t_data data;
 
-	t_linemap *map;
+  t_linemap *map;
 
-	map = parseFile("maps/test_maps/42.fdf");
-	line_print(map);
+  map = parseFile("maps/test_maps/42.fdf");
+  //	line_print(map);
 
-	data.map = map;
-	data.mlx = mlx_init();
-	data.win = mlx_new_window(data.mlx, 500, 500, "Fdf");
+  data.map = map;
+  data.mlx = mlx_init();
+  data.win = mlx_new_window(data.mlx, 500, 500, "Fdf");
 
-	data.img.img = mlx_new_image(data.mlx, 500, 500);
-	data.img.addr = mlx_get_data_addr(data.img.img, &(data.img.bits_per_pixel),
-									  &(data.img.line_length), &(data.img.endian));
+  data.img.img = mlx_new_image(data.mlx, 500, 500);
+  data.img.addr = mlx_get_data_addr(data.img.img, &(data.img.bits_per_pixel),
+      &(data.img.line_length), &(data.img.endian));
 
+  printf("%p\n", &data.img);
 
-	mlx_put_image_to_window(data.mlx, data.win, data.img.img, 0, 0);
+  my_mlx_pixel_put(&data.img,
+      10,
+      10,
+      0x00FF0000);
 
-	mlx_key_hook(data.win, key_hook, &data);
+  mlx_put_image_to_window(data.mlx, data.win, data.img.img, 0, 0);
 
-	mlx_loop_hook(data.mlx, render, &data);
+  mlx_key_hook(data.win, key_hook, &data);
 
-	mlx_loop(data.mlx);
+  mlx_loop_hook(data.mlx, render, &data);
+
+  mlx_loop(data.mlx);
 }
