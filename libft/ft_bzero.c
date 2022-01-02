@@ -21,7 +21,7 @@ void	ft_bzero(void *s, int n)
 	i = 0;
 	while (i < n2)
 	{
-		((long long *) s)[i] = 0;
+		((double *) s)[i] = 0;
 		i++;
 	}
 	i = n2 * 8;
