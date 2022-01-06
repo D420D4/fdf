@@ -5,6 +5,8 @@
 #ifndef FT_3D_H
 #define FT_3D_H
 
+#include "fdf.h"
+
 typedef struct s_point
 {
     float x;
@@ -20,6 +22,8 @@ typedef struct s_point2
 } t_point2;
 
 typedef float t_m4[16];
+
+int drawline(t_data *data, t_point t1, t_point t2, t_m4 mat);
 
 void set_identity(t_m4 *mat);
 void mult_matvec(t_m4 mat, t_point p1, t_point2 *out);
