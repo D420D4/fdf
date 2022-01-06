@@ -1,22 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_utils.c                                       :+:      :+:    :+:   */
+/*   ft3d_translate.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/06 22:44:31 by plefevre          #+#    #+#             */
-/*   Updated: 2022/01/06 22:45:18 by plefevre         ###   ########.fr       */
+/*   Created: 2022/01/06 23:41:34 by plefevre          #+#    #+#             */
+/*   Updated: 2022/01/06 23:41:36 by plefevre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/fdf.h"
-#include "../includes/maths.h"
+#include "../../includes/ft3d.h"
 
-void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
+void	set_translation_mat(t_m4 *mat, float x, float y, float z)
 {
-	char	*dst;
+	set_identity(mat);
+	(*mat)[3] = x;
+	(*mat)[7] = y;
+	(*mat)[11] = z;
+}
 
-	dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-	*(unsigned int *) dst = color;
+void	translate_mat(t_m4 *mat, float x, float y, float z)
+{
+	t_m4	m;
+
+	set_translation_mat(&m, x, y, z);
+	mult_matmat(mat, m);
 }

@@ -14,14 +14,23 @@ NAME	= fdf
 SRC		= main.c\
 			parse.c\
 			linemap.c\
-			ft_3d.c\
 			maths.c\
 			draw_utils.c\
 			basic_drawer.c\
 			line.c\
+			color.c\
+			xpm.c\
+			window_utils.c\
 			camera.c\
 			get_next_line/get_next_line.c\
-			get_next_line/get_next_line_utils.c
+			get_next_line/get_next_line_utils.c\
+			ft3d.c\
+			ft3d/ft3d_perspective.c\
+			ft3d/ft3d_resize.c\
+			ft3d/ft3d_rotate.c\
+			ft3d/ft3d_set.c\
+			ft3d/ft3d_setrot.c\
+			ft3d/ft3d_translate.c
 
 OBJ		= $(patsubst %.c, %.o, $(SRC))
 SRCDIR	= src/

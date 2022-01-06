@@ -1,22 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_utils.c                                       :+:      :+:    :+:   */
+/*   ft3d_rotate.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/06 22:44:31 by plefevre          #+#    #+#             */
-/*   Updated: 2022/01/06 22:45:18 by plefevre         ###   ########.fr       */
+/*   Created: 2022/01/06 23:41:19 by plefevre          #+#    #+#             */
+/*   Updated: 2022/01/06 23:41:21 by plefevre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/fdf.h"
-#include "../includes/maths.h"
+#include "../../includes/ft3d.h"
 
-void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
+void	rotate_x_mat(t_m4 *mat, float angle)
 {
-	char	*dst;
+	t_m4	m;
 
-	dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-	*(unsigned int *) dst = color;
+	set_rotation_x_mat(&m, angle);
+	mult_matmat(mat, m);
+}
+
+void	rotate_y_mat(t_m4 *mat, float angle)
+{
+	t_m4	m;
+
+	set_rotation_y_mat(&m, angle);
+	mult_matmat(mat, m);
+}
+
+void	rotate_z_mat(t_m4 *mat, float angle)
+{
+	t_m4	m;
+
+	set_rotation_z_mat(&m, angle);
+	mult_matmat(mat, m);
 }

@@ -69,17 +69,19 @@ t_linemap	*parse_file(char *file)
 	int			fd;
 	int			nb;
 
-	//TODO check error
 	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		return (0);
 	line = get_next_line(fd);
 	linemap = 0;
 	while (line)
 	{
 		p_linemap = line_new(convert_int(line, &nb));
-		p_linemap->size = nb;
 		if (!p_linemap)
 			return (line_freeall(linemap));
+		p_linemap->size = nb;
 		line_add(&linemap, p_linemap);
+		free(line);
 		line = get_next_line(fd);
 	}
 	map_finalize(linemap);

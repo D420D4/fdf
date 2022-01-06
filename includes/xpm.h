@@ -1,22 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_utils.c                                       :+:      :+:    :+:   */
+/*   xpm.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/06 22:44:31 by plefevre          #+#    #+#             */
-/*   Updated: 2022/01/06 22:45:18 by plefevre         ###   ########.fr       */
+/*   Created: 2022/01/07 00:24:40 by plefevre          #+#    #+#             */
+/*   Updated: 2022/01/07 00:24:56 by plefevre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/fdf.h"
-#include "../includes/maths.h"
+#ifndef XPM_H
+# define XPM_H
 
-void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
-{
-	char	*dst;
+# include <unistd.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
-	dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-	*(unsigned int *) dst = color;
-}
+int	generate_black_xpm(char *s);
+
+#endif

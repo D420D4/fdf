@@ -13,9 +13,9 @@
 #include "../includes/fdf.h"
 #include "../includes/linemap.h"
 
-t_linemap *line_new(int *line)
+t_linemap	*line_new(int *line)
 {
-	t_linemap *linemap;
+	t_linemap	*linemap;
 
 	linemap = malloc(sizeof(*linemap));
 	if (!linemap)
@@ -27,7 +27,7 @@ t_linemap *line_new(int *line)
 	return (linemap);
 }
 
-int line_add(t_linemap **start, t_linemap *linemap)
+int	line_add(t_linemap **start, t_linemap *linemap)
 {
 	if (*start)
 	{
@@ -38,12 +38,11 @@ int line_add(t_linemap **start, t_linemap *linemap)
 	return (0);
 }
 
-void map_finalize(t_linemap *map)
+void	map_finalize(t_linemap *map)
 {
-	int taille;
+	int	taille;
 
 	taille = map->size_tot;
-
 	while (map)
 	{
 		map->size_tot = taille;
@@ -51,9 +50,9 @@ void map_finalize(t_linemap *map)
 	}
 }
 
-void line_print(t_linemap *map)
+void	line_print(t_linemap *map)
 {
-	int i;
+	int	i;
 
 	if (map)
 	{
@@ -68,10 +67,12 @@ void line_print(t_linemap *map)
 	}
 }
 
-t_linemap *line_freeall(t_linemap *map)
+t_linemap	*line_freeall(t_linemap *map, t_linemap *previous)
 {
+	if (previous)
+		free(previous);
 	if (!map)
 		return (0);
 	free(map->line);
-	return (line_freeall(map->next));
+	return (line_freeall(map->next, map));
 }

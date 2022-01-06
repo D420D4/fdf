@@ -10,94 +10,74 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
 #include "mlx.h"
 #include "fdf.h"
 #include "linemap.h"
-#include "ft_3d.h"
+#include "ft3d.h"
 #include "maths.h"
 #include "basic_drawer.h"
 #include "camera.h"
 #include "libft.h"
+#include "xpm.h"
 
-int key_hook(int keycode, t_data *vars) {
+int	key_hook(int keycode, t_data *vars)
+{
 	printf("Hello from key_hook! %d \n", keycode);
 	if (keycode == 65307)
-		mlx_destroy_window(vars->mlx, vars->win);
+		win_close(vars);
 	return (0);
 }
 
-void clear_win(t_data *data) {
-    ft_bzero(data->img.addr, WIN_TAILLEX * WIN_TAILLEY * 4);
-}
+int	render(t_data *data)
+{
+	t_m4			mat;
+	t_linemap		*linemap;
+	t_camera		*camera;
+	float			zoom;
+	int				i;
 
-
-int render(t_data *data) {
-    t_m4 mat;
-    t_linemap *linemap;
-	static t_camera *camera;
-	static int zoom;
-	int i;
-
-	zoom = 10;
 	camera = camera_init();
-	if (!camera)
+	zoom = camera_center(camera, data->map) / 1.5;
+	camera->rz = 0.5;
+	camera->rx = 1;
+	if (!camera || !data->win)
 		return (0);
-    if (!data->win)
-	{
-		free(camera);
-		return (0);
-	}
-	zoom = camera_center(camera, data->map);
-
-    i = 0;
-    clear_win(data);
-    set_identity(&mat);
-    perspective_mat(&mat, 1, 1, 1.0, 1.1);
-	translate_mat(&mat, camera->x, camera->y, camera->z);
-	rotateZ_mat(&mat, camera->rz);
-	rotateX_mat(&mat, camera->rx);
-	rotateY_mat(&mat, camera->ry);
-	resize_mat(&mat, zoom, zoom, zoom);
+	i = 0;
+	set_identity(&mat);
+	perspective_mat(&mat, 1, 1, 1.1);
+	apply_camera(camera, &mat, zoom);
 	linemap = data->map;
-    while (linemap) {
-        draw_row(data, mat, *linemap, i);
-        i++;
-        linemap = linemap->next;
-    }
-    mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
-
-    //    printf(".");
-    return (1);
+	while (linemap && linemap->line)
+	{
+		draw_row(data, mat, *linemap, i++);
+		linemap = linemap->next;
+	}
+	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
+	free (camera);
+	return (1);
 }
 
-int main(int argc, char **argv) {
-    t_data data;
+int	main(int argc, char **argv)
+{
+	t_data		data;
+	t_linemap	*map;
 
-    t_linemap *map;
-
-    if (argc != 2)
-        return (0);
-    map = parse_file(argv[1]);
+	if (argc != 2)
+		return (0);
+	map = parse_file(argv[1]);
 	if (!map)
 		return (0);
-    //	line_print(map);
-
-    data.map = map;
-    data.mlx = mlx_init();
+	data.map = map;
+	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (0);
-    data.win = mlx_new_window(data.mlx, WIN_TAILLEX, WIN_TAILLEY, "Fdf");
-
-    data.img.img = mlx_new_image(data.mlx, WIN_TAILLEX, WIN_TAILLEY);
-    data.img.addr = mlx_get_data_addr(data.img.img, &(data.img.bits_per_pixel),
-                                      &(data.img.line_length), &(data.img.endian));
-
-    mlx_put_image_to_window(data.mlx, data.win, data.img.img, 0, 0);
-
-    mlx_key_hook(data.win, key_hook, &data);
-
-    mlx_loop_hook(data.mlx, render, &data);
-
-    mlx_loop(data.mlx);
+	data.win = mlx_new_window(data.mlx, WIN_TX, WIN_TY, "Fdf");
+	data.img.img = mlx_new_image(data.mlx, WIN_TX, WIN_TY);
+	data.img.addr = mlx_get_data_addr(data.img.img, &(data.img.bits_per_pixel),
+			&(data.img.line_length), &(data.img.endian));
+	mlx_put_image_to_window(data.mlx, data.win, data.img.img, 0, 0);
+	mlx_key_hook(data.win, key_hook, &data);
+	mlx_hook(data.win, 33, 1L << 17, win_close, &data);
+	render(&data);
+	mlx_loop(data.mlx);
 }

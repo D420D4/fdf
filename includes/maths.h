@@ -1,12 +1,20 @@
-//
-// Created by plefevre on 1/6/22.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   maths.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/07 00:26:46 by plefevre          #+#    #+#             */
+/*   Updated: 2022/01/07 00:26:53 by plefevre         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef MATHS_H
-#define MATHS_H
+# define MATHS_H
 
-int ft_sqrt(int nb);
-int ft_abs(int n);
-int ft_max(int n1, int n2);
+int	ft_sqrt(int nb);
+int	ft_abs(int n);
+int	ft_max(int n1, int n2);
 
 #endif
