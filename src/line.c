@@ -6,7 +6,7 @@
 /*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 22:46:12 by plefevre          #+#    #+#             */
-/*   Updated: 2022/01/06 22:49:39 by plefevre         ###   ########.fr       */
+/*   Updated: 2022/01/08 00:43:24 by plefevre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,19 +58,19 @@ static int	drawline_win(t_data *data, t_point2 t1, t_point2 t2)
 	int	y;
 	int	c;
 
+	finalize_point(&t1);
+	finalize_point(&t2);
 	if (!ressere(&t1, &t2))
 		return (0);
 	max = ft_max(ft_abs(t1.x - t2.x), ft_abs(t1.y - t2.y));
-	i = 0;
-	while (i < max)
+	i = -1;
+	while (++i < max)
 	{
 		x = t1.x + (t2.x - t1.x) * i / max;
 		y = t1.y + (t2.y - t1.y) * i / max;
 		c = t1.c + (t2.c - t1.c) * i / max;
 		if (x >= 0 && x < WIN_TX && y >= 0 && y < WIN_TY)
-			my_mlx_pixel_put(&(data->img),
-				x, y, z_to_color(c));
-		i++;
+			my_mlx_pixel_put(&(data->img), x, y, z_to_color(c));
 	}
 	return (1);
 }
@@ -84,6 +84,7 @@ int	drawline(t_data *data, t_point t1, t_point t2, t_m4 mat)
 	mult_matvec(mat, t2, &bt2);
 	bt1.c = t1.z;
 	bt2.c = t2.z;
-	drawline_win(data, bt1, bt2);
+	if (bt1.w > 0 && bt2.w > 0)
+		drawline_win(data, bt1, bt2);
 	return (0);
 }

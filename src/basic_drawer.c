@@ -6,7 +6,7 @@
 /*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 22:52:46 by plefevre          #+#    #+#             */
-/*   Updated: 2022/01/06 22:52:48 by plefevre         ###   ########.fr       */
+/*   Updated: 2022/01/08 00:48:48 by plefevre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	draw_inter_row(t_data *data, t_m4 mat, t_linemap line, int y)
 	return (0);
 }
 
-int	draw_row(t_data *data, t_m4 mat, t_linemap line, int y)
+static int	draw_row(t_data *data, t_m4 mat, t_linemap line, int y)
 {
 	int		i;
 	t_point	t1;
@@ -48,4 +48,18 @@ int	draw_row(t_data *data, t_m4 mat, t_linemap line, int y)
 	if (line.next && line.next->line)
 		draw_inter_row(data, mat, line, y);
 	return (0);
+}
+
+void	draw_map(t_data *data, t_m4 mat)
+{
+	int			i;
+	t_linemap	*linemap;
+
+	i = 0;
+	linemap = data->map;
+	while (linemap && linemap->line)
+	{
+		draw_row(data, mat, *linemap, i++);
+		linemap = linemap->next;
+	}
 }

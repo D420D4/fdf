@@ -23,7 +23,6 @@ typedef struct s_linemap {
 t_linemap	*line_new(int *line);
 int			line_add(t_linemap **start, t_linemap *linemap);
 t_linemap	*line_freeall(t_linemap *map, t_linemap *previous);
-void		line_print(t_linemap *map);
 void		map_finalize(t_linemap *map);
 
 #endif //FDF_LINEMAP_H

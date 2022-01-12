@@ -50,23 +50,6 @@ void	map_finalize(t_linemap *map)
 	}
 }
 
-void	line_print(t_linemap *map)
-{
-	int	i;
-
-	if (map)
-	{
-		i = 0;
-		while (i < map->size)
-		{
-			printf("%d\t", map->line[i]);
-			i++;
-		}
-		printf("\n");
-		line_print(map->next);
-	}
-}
-
 t_linemap	*line_freeall(t_linemap *map, t_linemap *previous)
 {
 	if (previous)

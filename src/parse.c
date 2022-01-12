@@ -6,7 +6,7 @@
 /*   By: plefevre <plefevre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 12:27:39 by plefevre          #+#    #+#             */
-/*   Updated: 2022/01/06 12:31:15 by plefevre         ###   ########.fr       */
+/*   Updated: 2022/01/08 14:09:49 by plefevre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,26 @@ int	*convert_int(char *line, int *nb)
 		return (0);
 	while (i < nb_element)
 	{
-		line = go_next_start(line);
 		line_int[i] = ft_atoi(line);
+		line = go_next_start(line);
 		i++;
 	}
 	*nb = nb_element;
 	return (line_int);
+}
+
+static int	ft_open_no_directory(char *path)
+{
+	int	fd;
+
+	fd = open(path, O_DIRECTORY);
+	if (fd >= 0)
+	{
+		close (fd);
+		return (-1);
+	}
+	close (fd);
+	return (open(path, O_RDONLY));
 }
 
 t_linemap	*parse_file(char *file)
@@ -69,7 +83,7 @@ t_linemap	*parse_file(char *file)
 	int			fd;
 	int			nb;
 
-	fd = open(file, O_RDONLY);
+	fd = ft_open_no_directory(file);
 	if (fd < 0)
 		return (0);
 	line = get_next_line(fd);
@@ -78,7 +92,7 @@ t_linemap	*parse_file(char *file)
 	{
 		p_linemap = line_new(convert_int(line, &nb));
 		if (!p_linemap)
-			return (line_freeall(linemap));
+			return (line_freeall(linemap, 0));
 		p_linemap->size = nb;
 		line_add(&linemap, p_linemap);
 		free(line);
